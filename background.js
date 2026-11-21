@@ -415,6 +415,8 @@ async function buildPopupState() {
     },
     step: local.step,
     keymap: cloneKeymap(local.keymap),
+    // 供 popup 校验后台是否是最新版本（新增动作时能立刻暴露「扩展未刷新」）
+    keyActions: KEY_ACTIONS.slice(),
     presets: PRESETS
   };
 }

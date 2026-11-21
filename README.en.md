@@ -14,7 +14,7 @@
 
 <p align="center">
   <img src="docs/badges/privacy.svg" height="28" alt="No data collected">
-  <img src="docs/badges/version.svg" height="28" alt="v1.0.0">
+  <img src="docs/badges/version.svg" height="28" alt="v1.0.1">
   <img src="docs/badges/shortcuts.svg" height="28" alt="13 shortcuts">
 </p>
 

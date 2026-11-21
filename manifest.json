@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Video Speed Tuner",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Adjust playback speed on any site with HTML5 video. 0.1×–16× with 1% precision, per-site memory, and 13 rebindable shortcuts.",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAm5X9NEhhr935qV2Cw2thWQ0V5FcnG2FBJtZRWz+1T1IBaXdHWrCrQquzsBn7kZCZ2UoP21VYubPjNIzvPtzaNjnR9M7hlb037qGm+E1zGN9mAWIFt1BgFoslhPnwQbPY1B0S/hNKCemvpTg428plOcA8U3PiPqMqc4ZWdbJhFHSjjt17IYF0QUon/OePlOH7qfdB7QDd7zS+MBMlbF1SLi2uCiQjO6VB2Vw0lpWrz3ZgM5Cpr7kP3nH8SkauajaT31geYHdFO3cm5bEdvHySt4wiW8PTKDFQFA0xn0aOBBOHYiA5bh0ymdVkISro/kE3SFz/QFXr65G1CmEaKPoLYwIDAQAB",
   "minimum_chrome_version": "102",

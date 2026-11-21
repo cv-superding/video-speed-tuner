@@ -114,6 +114,16 @@ function bindingLabel(b) {
   return parts.join('+');
 }
 
+/** 两个组合键是否完全相同 */
+function sameBinding(a, b) {
+  if (!a || !b) return false;
+  return a.code === b.code
+    && !!a.ctrl === !!b.ctrl
+    && !!a.alt === !!b.alt
+    && !!a.shift === !!b.shift
+    && !!a.meta === !!b.meta;
+}
+
 /* ------------------------------ state ---------------------------- */
 
 let S = null;
@@ -304,12 +314,18 @@ async function saveBinding(action, binding) {
     } else if (res && res.error === 'conflict') {
       setTip('与「' + (ACTION_NAMES[res.conflictWith] || res.conflictWith) + '」冲突，换一个组合', true);
       renderKeys();
+    } else if (res && res.error === 'bad-action') {
+      setTip('扩展未更新，无法保存这个动作。请到 edge://extensions 点一下刷新', true);
+      renderKeys();
+    } else if (res && res.error === 'bad-binding') {
+      setTip('这个组合不被支持，换一个', true);
+      renderKeys();
     } else {
       setTip('保存失败，请重试', true);
       renderKeys();
     }
   } catch (e) {
-    setTip('保存失败，请重试', true);
+    setTip('与后台通信失败，请刷新扩展后重试', true);
     renderKeys();
   }
 }
@@ -493,6 +509,16 @@ function applyLocal(rate) {
 /* ------------------------------ wiring --------------------------- */
 
 const TAB_ORDER = ['speed', 'keys', 'more'];
+
+/** 后台不认识某个动作时，说明扩展没刷新，直接把原因指出来 */
+function checkSync() {
+  if (!S || !Array.isArray(S.keyActions)) return true;
+  const missing = ACTION_DEFS.filter((d) => S.keyActions.indexOf(d.id) < 0);
+  if (!missing.length) return true;
+  setTip('扩展未更新：「' + missing.map((d) => d.name).join('、')
+    + '」暂时改不了。请到 edge://extensions 点一下刷新', true);
+  return false;
+}
 
 /** 内容超出时给底部加渐隐，提示还能往下滚 */
 function updateScrollHint() {
@@ -678,6 +704,19 @@ function wire() {
       meta: e.metaKey
     };
     stopRecording();
+
+    if (!binding.code) {
+      setTip('识别不到这个按键，换一个试试', true);
+      return;
+    }
+
+    // 按了和原来一样的组合，明确告知，避免看起来「点了没反应」
+    const cur = S && S.keymap ? S.keymap[action] : null;
+    if (sameBinding(cur, binding)) {
+      setTip('「' + (ACTION_NAMES[action] || action) + '」已经是 ' + bindingLabel(binding) + '，换一个组合', false);
+      return;
+    }
+
     saveBinding(action, binding);
   }, true);
 
@@ -794,9 +833,10 @@ function render() {
   paintStatus();
   paintSites();
   paintBlockButton();
-  renderKeys();
+    renderKeys();
     renderSystemKeys();
     updateHint();
+    checkSync();
 
     if (S.opts) {
       document.querySelectorAll('input[data-opt]').forEach((cb) => {

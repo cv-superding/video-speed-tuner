@@ -17,7 +17,7 @@ BADGES = [
     ('platform', 'Edge · Chrome', '#2563eb'),
     ('manifest', 'v3', '#8b5cf6'),
     ('privacy', 'no data collected', '#22c55e'),
-    ('version', '1.0.0', '#f59e0b'),
+    ('version', '1.0.1', '#f59e0b'),
     ('shortcuts', '13', '#0ea5e9'),
 ]
 
