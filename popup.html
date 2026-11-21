@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Speed Tuner</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app">
+
+    <header class="head">
+      <div class="brand">
+        <img class="logo" id="logo" src="icons/icon48.png" alt="">
+        <div class="meta">
+          <div class="name">Video Speed Tuner</div>
+          <div class="host-row">
+            <span class="host" id="host">检测中…</span>
+            <span class="status" id="status"></span>
+          </div>
+        </div>
+      </div>
+      <label class="switch master" title="启用 / 停用">
+        <input type="checkbox" id="enabled">
+        <span class="track"></span>
+        <span class="knob"></span>
+      </label>
+    </header>
+
+    <nav class="tabs" id="tabs">
+      <button type="button" data-tab="speed" class="on">速度</button>
+      <button type="button" data-tab="keys">快捷键</button>
+      <button type="button" data-tab="more">设置</button>
+      <span class="tab-ink" id="tabInk" aria-hidden="true"></span>
+    </nav>
+
+    <div class="panes">
+
+      <!-- ===================== 速度 ===================== -->
+      <div class="pane on" id="pane-speed">
+        <section class="card deck">
+          <div class="dial">
+            <button class="step" id="minus" type="button" aria-label="减速">
+              <svg viewBox="0 0 16 16" width="16" height="16"><path d="M3.5 8h9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+            </button>
+
+            <div class="readout">
+              <input id="rateInput" class="rate" type="text" inputmode="decimal" value="1" spellcheck="false" autocomplete="off">
+              <span class="x">×</span>
+            </div>
+
+            <button class="step" id="plus" type="button" aria-label="加速">
+              <svg viewBox="0 0 16 16" width="16" height="16"><path d="M8 3.5v9M3.5 8h9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+
+          <div class="track-wrap">
+            <input id="slider" type="range" min="0" max="1000" step="1" value="454" aria-label="播放速度">
+            <div class="ticks">
+              <span>0.1×</span>
+              <span class="tick-mid">1×</span>
+              <span>16×</span>
+            </div>
+          </div>
+
+          <div class="presets" id="presets"></div>
+
+          <div class="scope">
+            <span class="label">作用范围</span>
+            <div class="segmented" id="scopeSeg" role="tablist">
+              <button type="button" data-scope="tab">本页</button>
+              <button type="button" data-scope="site">本站</button>
+              <button type="button" data-scope="global">全局</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card options">
+          <label class="row">
+            <span class="row-text">
+              <span class="row-title">自动套用</span>
+              <span class="row-sub">新视频按记忆速度播放</span>
+            </span>
+            <span class="switch"><input type="checkbox" data-opt="autoApply"><span class="track"></span><span class="knob"></span></span>
+          </label>
+
+          <label class="row">
+            <span class="row-text">
+              <span class="row-title">强力锁定</span>
+              <span class="row-sub">阻止网站把速度改回去</span>
+            </span>
+            <span class="switch"><input type="checkbox" data-opt="lock"><span class="track"></span><span class="knob"></span></span>
+          </label>
+        </section>
+      </div>
+
+      <!-- ==================== 快捷键 ==================== -->
+      <div class="pane" id="pane-keys">
+        <section class="card">
+          <label class="row keymaster">
+            <span class="row-text">
+              <span class="row-title">启用页面快捷键</span>
+              <span class="row-sub">在网页里按键直接操作</span>
+            </span>
+            <span class="switch"><input type="checkbox" data-opt="keysEnabled"><span class="track"></span><span class="knob"></span></span>
+          </label>
+
+          <p class="tip" id="keyTip">点按键格后按下组合键 · Esc 取消 · Backspace 清除</p>
+
+          <div class="keylist" id="keylist"></div>
+
+          <button class="ghost" id="resetKeys" type="button">恢复默认快捷键</button>
+        </section>
+      </div>
+
+      <!-- ===================== 设置 ===================== -->
+      <div class="pane" id="pane-more">
+        <section class="card">
+          <div class="setting">
+            <span class="row-title">调速步长</span>
+            <div class="segmented" id="stepSeg">
+              <button type="button" data-step="0.01">1%</button>
+              <button type="button" data-step="0.05">5%</button>
+              <button type="button" data-step="0.1">10%</button>
+              <button type="button" data-step="0.25">25%</button>
+            </div>
+          </div>
+
+          <div class="row row-static">
+            <span class="row-text">
+              <span class="row-title">速度角标</span>
+              <span class="row-sub">调整速度时提示</span>
+            </span>
+            <span class="row-end">
+              <div class="segmented sm" id="overlayScaleSeg">
+                <button type="button" data-scale="0.85">小</button>
+                <button type="button" data-scale="1">中</button>
+                <button type="button" data-scale="1.2">大</button>
+              </div>
+              <label class="switch"><input type="checkbox" data-opt="overlay"><span class="track"></span><span class="knob"></span></label>
+            </span>
+          </div>
+
+          <div class="row row-static">
+            <span class="row-text">
+              <span class="row-title">角标位置</span>
+            </span>
+            <div class="corner-picker" id="cornerPicker" role="group" aria-label="角标位置">
+              <button type="button" data-pos="tl" title="左上"></button>
+              <button type="button" data-pos="tr" title="右上"></button>
+              <button type="button" data-pos="bl" title="左下"></button>
+              <button type="button" data-pos="br" title="右下"></button>
+            </div>
+          </div>
+
+          <div class="row row-static">
+            <span class="row-text">
+              <span class="row-title">浮动控制面板</span>
+              <span class="row-sub">播放时显示，可拖动 · <button class="link inline" id="resetPanel" type="button">重置位置</button></span>
+            </span>
+            <span class="row-end">
+              <div class="segmented sm" id="panelScaleSeg">
+                <button type="button" data-scale="0.85">小</button>
+                <button type="button" data-scale="1">中</button>
+                <button type="button" data-scale="1.2">大</button>
+              </div>
+              <label class="switch"><input type="checkbox" data-opt="panel"><span class="track"></span><span class="knob"></span></label>
+            </span>
+          </div>
+
+          <label class="row">
+            <span class="row-text">
+              <span class="row-title">图标显示速度</span>
+              <span class="row-sub">工具栏图标上的速度徽标</span>
+            </span>
+            <span class="switch"><input type="checkbox" id="badgeToggle" data-opt="badge"><span class="track"></span><span class="knob"></span></span>
+          </label>
+        </section>
+
+        <section class="card">
+          <div class="row row-static">
+            <span class="row-text">
+              <span class="row-title" id="blockTitle">在本站禁用</span>
+              <span class="row-sub" id="blockSub">禁用后扩展在此网站完全不生效</span>
+            </span>
+            <button class="btn-tonal" id="toggleBlock" type="button">禁用</button>
+          </div>
+
+          <div class="sitehead">
+            <span class="row-title">站点规则</span>
+            <button class="link" id="clearSites" type="button">清空</button>
+          </div>
+          <div class="sites" id="sites"></div>
+
+          <div class="sysblock">
+            <div class="syshead">
+              <span>浏览器级快捷键</span>
+              <button class="link neutral" id="openShortcuts" type="button">去修改</button>
+            </div>
+            <div class="syslist" id="syslist">读取中…</div>
+          </div>
+        </section>
+      </div>
+
+    </div>
+
+    <footer class="foot">
+      <span class="hint" id="hint">Alt + . / , 可全局调速</span>
+      <button class="link" id="resetAll" type="button">重置全部</button>
+    </footer>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
