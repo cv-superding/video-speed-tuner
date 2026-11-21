@@ -7,15 +7,15 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/license-MIT-16a34a?style=for-the-badge&logo=opensourceinitiative&logoColor=white" alt="MIT License">
-  <img src="https://img.shields.io/badge/platform-Edge%20%7C%20Chrome-2563eb?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Edge / Chrome">
-  <img src="https://img.shields.io/badge/manifest-v3-8b5cf6?style=for-the-badge&logo=json&logoColor=white" alt="Manifest V3">
+  <img src="docs/badges/license.svg" height="28" alt="MIT License">
+  <img src="docs/badges/platform.svg" height="28" alt="Edge / Chrome">
+  <img src="docs/badges/manifest.svg" height="28" alt="Manifest V3">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/privacy-no%20data%20collected-brightgreen?style=for-the-badge&logo=shield&logoColor=white" alt="No data collected">
-  <img src="https://img.shields.io/badge/version-1.0.0-f59e0b?style=for-the-badge" alt="v1.0.0">
-  <img src="https://img.shields.io/badge/shortcuts-13-0ea5e9?style=for-the-badge&logo=keyboard&logoColor=white" alt="13 shortcuts">
+  <img src="docs/badges/privacy.svg" height="28" alt="No data collected">
+  <img src="docs/badges/version.svg" height="28" alt="v1.0.0">
+  <img src="docs/badges/shortcuts.svg" height="28" alt="13 shortcuts">
 </p>
 
 <p align="center">

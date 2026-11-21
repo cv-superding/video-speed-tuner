@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128.2" height="28" role="img" aria-label="manifest: v3">
+  <title>manifest: v3</title>
+  <linearGradient id="s" x2="0" y2="100%">
+    <stop offset="0" stop-color="#fff" stop-opacity=".08"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <rect width="128.2" height="28" rx="3" fill="#8b5cf6"/>
+  <rect width="90.9" height="28" rx="3" fill="#2d333b"/>
+  <rect x="87.9" width="3" height="28" fill="#2d333b"/>
+  <rect width="128.2" height="28" rx="3" fill="url(#s)"/>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,DejaVu Sans,sans-serif" font-size="10.5" font-weight="bold" letter-spacing="1.0">
+    <text x="45.4" y="18.5">MANIFEST</text>
+    <text x="109.6" y="18.5">v3</text>
+  </g>
+</svg>
