@@ -680,12 +680,48 @@
   }, true);
 
   // 页面内快捷键（用户可自定义）
+  /**
+   * 光标是否落在可输入的位置。
+   *
+   * 用 composedPath 穿透 Shadow DOM —— NAS 面板、后台管理系统这类应用的输入框
+   * 常挂在 shadow root 里，事件冒到 window 时 target 已被重定向成宿主元素，
+   * 只判断 e.target 会漏掉，结果就是「在密码框里打不出字」。
+   */
+  function isTypingTarget(e) {
+    const path = typeof e.composedPath === 'function' ? e.composedPath() : [e.target];
+
+    for (const node of path) {
+      if (!node || node.nodeType !== 1) continue;
+      if (/^(INPUT|TEXTAREA|SELECT)$/i.test(node.tagName || '')) return true;
+      if (node.isContentEditable) return true;
+      const role = node.getAttribute && node.getAttribute('role');
+      if (role === 'textbox' || role === 'searchbox' || role === 'combobox') return true;
+    }
+
+    // 富文本框有时只把 contenteditable 标在祖先节点上
+    const sel = document.getSelection && document.getSelection();
+    let n = sel && sel.anchorNode;
+    if (n && n.nodeType !== 1) n = n.parentElement;
+    for (let i = 0; n && i < 6; i++) {
+      if (n.isContentEditable) return true;
+      n = n.parentElement;
+    }
+    return false;
+  }
+
   window.addEventListener('keydown', (e) => {
     if (!opts.keysEnabled) return;
     if (opts.enabled === false) return;
 
-    const t = e.target;
-    if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/i.test(t.tagName || ''))) return;
+    // 站点被排除时，连按键都不能碰。否则扩展「不干活但占着键」，
+    // 用户会以为键盘坏了 —— 这正是 NAS 面板里打不出字的原因。
+    if (blockedHere) return;
+
+    if (isTypingTarget(e)) return;
+
+    // 页面上没有可控制的媒体就不占用按键。
+    // 后台管理、NAS、文档站这类页面本就不该被快捷键干扰。
+    if (!document.querySelectorAll('video,audio').length) return;
 
     const map = opts.keymap || {};
     let action = null;

@@ -742,7 +742,10 @@ if (chrome.contextMenus) {
   chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     if (!tab || tab.id == null) return;
     const state = await fullState();
-    const cur = resolveRate(state, tab.id, tab.url || '').rate;
+    const resolved = resolveRate(state, tab.id, tab.url || '');
+    // 被排除的站点上一律不响应右键菜单
+    if (!state.enabled || isBlocked(resolved.host, state.blocklist)) return;
+    const cur = resolved.rate;
 
     let next = null;
     if (info.menuItemId === 'vsp:faster') next = cur + state.step;
